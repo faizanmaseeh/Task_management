@@ -1,6 +1,5 @@
 import axios from "axios";
 import React, { createContext, useEffect } from "react";
-import { useUserContext } from "./userContext";
 import toast from "react-hot-toast";
 
 const TasksContext = createContext();
@@ -8,7 +7,6 @@ const TasksContext = createContext();
 const serverUrl = "http://localhost:8000/api/v1";
 
 export const TasksProvider = ({ children }) => {
-  const userId = useUserContext().user._id;
 
   const [tasks, setTasks] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
@@ -133,7 +131,7 @@ export const TasksProvider = ({ children }) => {
 
   useEffect(() => {
     getTasks();
-  }, [userId]);
+  }, []);
 
   console.log("Active tasks", activeTasks);
 

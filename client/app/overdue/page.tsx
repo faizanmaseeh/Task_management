@@ -1,6 +1,5 @@
 "use client";
 import { useTasks } from "@/context/taskContext";
-import useRedirect from "@/hooks/useUserRedirect";
 import { Task } from "@/utils/types";
 import { filteredTasks, overdueTasks } from "@/utils/utilities";
 import { useEffect } from "react";
@@ -10,7 +9,6 @@ import { motion } from "framer-motion";
 import { container, item } from "@/utils/animations";
 
 export default function Home() {
-  useRedirect("/login");
 
   const { tasks, openModalForAdd, priority, setPriority } = useTasks();
 
