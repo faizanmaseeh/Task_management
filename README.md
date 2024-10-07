@@ -1,191 +1,218 @@
-Task Management Project
-Project Setup
+# Task Management System Documentation
 
-*******************
+## API Documentation
 
-Frontend (Client)
-Navigate to the client folder:
-cd client
-Install the necessary dependencies:
-npm install
-Start the frontend development server:
-npm run dev
+### Base URL
+```
+http://localhost:8000/api/v1
+```
 
-******************
+### Endpoints
 
-Backend (API Server)
-Navigate to the backend folder:
-cd backend
-Install the necessary dependencies:
-npm install
-Start the backend server:
-npm start
+#### 1. Create a Task
 
-Make sure you have a .env file with the following content:
-MONGO_URI=mongodb+srv://S_Users:Scaler7777@cluster0.p51fsyk.mongodb.net/SCALER_DATA?retryWrites=true&w=majority
-JWT_SECRET=secretkey79999
-CLIENT_URL=http://localhost:3000
-PORT=8000
+- **URL:** `/task/create`
+- **Method:** `POST`
+- **Description:** Create a new task by providing task details.
 
+- **Request Body:**
+  ```json
+  {
+    "title": "string",         // Title of the task
+    "description": "string",   // Detailed description of the task
+    "dueDate": "string",       // Due date of the task (format: YYYY-MM-DD)
+    "priority": "string",      // Priority of the task (values: low, medium, high)
+    "status": "string"         // Current status of the task (values: pending, in-progress, completed)
+  }
+  ```
 
-***************
+- **Responses:**
+  - **201 Created**
+    - **Description:** Task created successfully.
+    - **Response Body:**
+      ```json
+      {
+        "_id": "string",         // Task ID
+        "title": "string",
+        "description": "string",
+        "dueDate": "string",
+        "priority": "string",
+        "status": "string"
+      }
+      ```
+  - **400 Bad Request**
+    - **Description:** Invalid task data (missing required fields).
+    - **Response Body:**
+      ```json
+      {
+        "message": "Title is required!" // or other validation messages
+      }
+      ```
+  - **500 Internal Server Error**
+    - **Description:** General error handling for server issues.
+    - **Response Body:**
+      ```json
+      {
+        "message": "Error message here"
+      }
+      ```
 
-API Endpoints
-Task Management API
+#### 2. Get All Tasks
 
-Create a Task
-URL: /task/create
-Method: POST
-Description: Creates a new task.
-Protected: Yes
-Request Body:
-json
-Copy code
-{
-  "title": "Task title",
-  "description": "Task description",
-  "dueDate": "2023-10-01"
-}
+- **URL:** `/tasks`
+- **Method:** `GET`
+- **Description:** Retrieve all tasks.
 
+- **Responses:**
+  - **200 OK**
+    - **Response Body:**
+      ```json
+      {
+        "length": 0,                // Number of tasks
+        "tasks": [                  // Array of task objects
+          {
+            "_id": "string",
+            "title": "string",
+            "description": "string",
+            "dueDate": "string",
+            "priority": "string",
+            "status": "string"
+          }
+        ]
+      }
+      ```
 
-Get All Tasks
-URL: /tasks
-Method: GET
-Description: Retrieves all tasks.
-Protected: Yes
+#### 3. Get a Task
 
-Get Task by ID
-URL: /task/:id
-Method: GET
-Description: Retrieves a single task by its ID.
-Protected: Yes
+- **URL:** `/task/:id`
+- **Method:** `GET`
+- **Description:** Retrieve a single task by its ID.
 
-Update Task
-URL: /task/:id
-Method: PATCH
-Description: Updates a task by its ID.
-Protected: Yes
-Request Body:
-json
-Copy code
-{
-  "title": "Updated title",
-  "description": "Updated description",
-  "dueDate": "2023-10-05"
-}
+- **Responses:**
+  - **200 OK**
+    - **Response Body:**
+      ```json
+      {
+        "_id": "string",
+        "title": "string",
+        "description": "string",
+        "dueDate": "string",
+        "priority": "string",
+        "status": "string"
+      }
+      ```
+  - **400 Bad Request**
+    - **Description:** Please provide a task ID.
+  - **404 Not Found**
+    - **Description:** Task not found.
 
-Delete Task
-URL: /task/:id
-Method: DELETE
-Description: Deletes a task by its ID.
-Protected: Yes
+#### 4. Update a Task
 
+- **URL:** `/task/:id`
+- **Method:** `PATCH`
+- **Description:** Update an existing task by ID.
 
-User Authentication & Management API
+- **Request Body:**
+  ```json
+  {
+    "title": "string",
+    "description": "string",
+    "dueDate": "string",
+    "priority": "string",
+    "status": "string",
+    "completed": "boolean"
+  }
+  ```
 
-Register User
-URL: /register
-Method: POST
-Description: Registers a new user.
-Request Body:
-json
-Copy code
-{
-  "name": "John Doe",
-  "email": "john@example.com",
-  "password": "password123"
-}
+- **Responses:**
+  - **200 OK**
+    - **Response Body:**
+      ```json
+      {
+        "_id": "string",
+        "title": "string",
+        "description": "string",
+        "dueDate": "string",
+        "priority": "string",
+        "status": "string"
+      }
+      ```
+  - **404 Not Found**
+    - **Description:** Task not found.
 
+#### 5. Delete a Task
 
-Login User
-URL: /login
-Method: POST
-Description: Authenticates a user.
-Request Body:
-json
-Copy code
-{
-  "email": "john@example.com",
-  "password": "password123"
-}
+- **URL:** `/task/:id`
+- **Method:** `DELETE`
+- **Description:** Delete a task by its ID.
 
+- **Responses:**
+  - **200 OK**
+    - **Response Body:**
+      ```json
+      {
+        "message": "Task deleted successfully!"
+      }
+      ```
+  - **404 Not Found**
+    - **Description:** Task not found.
 
-Logout User
-URL: /logout
-Method: GET
-Description: Logs out the authenticated user.
-Protected: Yes
+---
 
+## Frontend Documentation
 
-Get User Profile
-URL: /user
-Method: GET
-Description: Retrieves the logged-in user's profile.
-Protected: Yes
+### Tasks Context
 
+The `TasksContext` provides a context for managing tasks in a React application. It uses Axios for making API calls to the backend.
 
-Update User Profile
-URL: /user
-Method: PATCH
-Description: Updates the authenticated user's profile.
-Protected: Yes
-Request Body:
-json
-Copy code
-{
-  "name": "Updated Name",
-  "email": "updated.email@example.com"
-}
+### Key Features
 
+- **State Management:** 
+  - `tasks`: Array of tasks fetched from the API.
+  - `loading`: Boolean indicating loading state.
+  - `task`: Object representing the currently selected task.
+  - `isEditing`: Boolean indicating if a task is being edited.
+  - `priority`: String for filtering tasks by priority.
+  - `activeTask`: Currently active task for editing.
+  - `modalMode`: Mode of the modal (`add` or `edit`).
+  - `profileModal`: Boolean to manage profile modal visibility.
 
-Admin: Delete User
-URL: /admin/users/:id
-Method: DELETE
-Description: Deletes a user by ID. Admin access required.
-Protected: Yes
+### Functions
 
+1. **getTasks:** Fetches all tasks from the API and updates the `tasks` state.
+2. **getTask:** Fetches a specific task based on its ID.
+3. **createTask:** Creates a new task using the provided task data.
+4. **updateTask:** Updates an existing task with the given data.
+5. **deleteTask:** Deletes a task based on its ID.
+6. **handleInput:** Handles changes to input fields for the task.
 
-Admin: Get All Users
-URL: /admin/users
-Method: GET
-Description: Retrieves a list of all users. Admin access required.
-Protected: Yes
+### Usage
 
+Wrap your application with the `TasksProvider` to provide context to your components:
 
-Check Login Status
-URL: /login-status
-Method: GET
-Description: Checks if the user is logged in.
+```javascript
+import { TasksProvider } from "./context/TasksContext";
 
+const App = () => {
+  return (
+    <TasksProvider>
+      {/* Your components here */}
+    </TasksProvider>
+  );
+};
+```
 
-Email Verification
-URL: /verify-email
-Method: POST
-Description: Verifies the user's email. Protected route.
+Use the `useTasks` hook to access tasks and functions in your components:
 
-Forgot Password
-URL: /forgot-password
-Method: POST
-Description: Sends a password reset email to the user.
+```javascript
+import { useTasks } from "./context/TasksContext";
 
-Reset Password
-URL: /reset-password/:resetPasswordToken
-Method: POST
-Description: Resets the user's password using the reset token.
-Request Body:
-json
-Copy code
-{
-  "password": "newpassword123"
-}
+const MyComponent = () => {
+  const { tasks, createTask, loading } = useTasks();
 
-Change Password
-URL: /change-password
-Method: PATCH
-Description: Changes the user's password. User must be logged in.
-Protected: Yes
+  // Use tasks and functions as needed
+};
+```
 
-Additional Information
-Database: MongoDB (connected using Mongoose)
-Authentication: JWT (JSON Web Token) based
-
+### Note
+Ensure that the API server is running, and the `serverUrl` is correctly set in your context to avoid connectivity issues.
